@@ -31,3 +31,9 @@ Route::post('/demo',function(){
 Route::delete('/demo/{id}',function($id){
     return response($id,200);
 });
+
+Route::get('/test',function(){
+    p("Working");
+});
+
+Route::post('user/store','App\Http\Controllers\api\UserController@store');
