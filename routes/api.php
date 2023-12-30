@@ -20,5 +20,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/demo',function(){
     $result["response"]="This is output";
-    echo json_encode($result);
+    return response()->json($result);
+});
+
+Route::post('/demo',function(){
+    $result['response']="This is a Post Request";
+    return response()->json($result);
+
+});
+Route::delete('/demo/{id}',function($id){
+    return response($id,200);
 });
