@@ -23,8 +23,11 @@ Route::get('/demo',function(){
     return response()->json($result);
 });
 
-Route::post('/demo_post',function(){
+Route::post('/demo',function(){
     $result['response']="This is a Post Request";
     return response()->json($result);
 
+});
+Route::delete('/demo/{id}',function($id){
+    return response($id,200);
 });
