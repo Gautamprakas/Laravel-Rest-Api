@@ -37,3 +37,5 @@ Route::get('/test',function(){
 });
 
 Route::post('user/store','App\Http\Controllers\api\UserController@store');
+
+Route ::get('user/getData',[UserController::class,'index']);

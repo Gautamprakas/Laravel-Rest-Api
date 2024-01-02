@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -16,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        p("Working get api");
     }
 
     /**
@@ -41,12 +43,35 @@ class UserController extends Controller
             'name'=>['required'],
             'email'=>['required','email','unique:users,email'],
             'password'=>['required','min:8','confirmed'],
-            'password_confirmation'=>['required']
+            'password_confirmation'=>['required'],
+            // 'pincode'=>['required','min:6']
         ]);
         if($validator->fails()){
             return response()->json($validator->messages(),400);
         }else{
-            return response()->json(p($request->all()),200);
+            $data=[
+                "name"=>$request->name,
+                "email"=>$request->email,
+                "password"=>Hash::make($request->password),
+                "pincode"=>$request->pincode
+            ];
+            DB::beginTransaction();
+            try{
+                $user=User::create($data);
+                DB::commit();
+            }catch(\Exception $e){
+                DB::rollback();
+                $user=null;
+            }
+            if($user!=null){
+                return response()->json([
+                    "message"=>"Successfully Registered"
+
+                            ],200);
+            }else{
+                return response()->json(["message"=>"Internel Server Error"],500);
+            }
+            
         }
     }
 
