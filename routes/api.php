@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+Use App\Http\Controllers\api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +39,6 @@ Route::get('/test',function(){
 
 Route::post('user/store','App\Http\Controllers\api\UserController@store');
 
-Route ::get('user/getData',[UserController::class,'index']);
+Route ::get('user/getData/{flag}',[UserController::class,'index']);
+
+Route ::get('user/getUserById/{id}',[UserController::class,'show']);

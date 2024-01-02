@@ -16,9 +16,26 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($flag)
     {
-        p("Working get api");
+        $query=User::select("name","email");
+        if($flag==1){
+            $query->where("status",1);
+
+        }else if($flag==0){
+            $query->where("status",0);
+        }else{
+            $response=[
+                "message"=>"value can be either 0 or 1"];
+                return response()->json($response,400);
+        }
+        $users=$query->get();
+            $response=[
+                "message"=>"Active ".count($users)." Users found",
+                "status"=>1,
+                "data"=>$users,
+            ];
+        return response()->json($response,200);
     }
 
     /**
@@ -83,7 +100,17 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user=User::find($id);
+        if(is_null($user)){
+            $response=[
+                "message"=>"User Not found to this id "];
+        }else{
+            $response=[
+                "message"=>"User Find",
+                "data"=>$user
+            ];
+        }
+        return response()->json($response,200);
     }
 
     /**
