@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+Use App\Http\Controllers\api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,13 @@ Route::post('/demo',function(){
 Route::delete('/demo/{id}',function($id){
     return response($id,200);
 });
+
+Route::get('/test',function(){
+    p("Working");
+});
+
+Route::post('user/store','App\Http\Controllers\api\UserController@store');
+
+Route ::get('user/getData/{flag}',[UserController::class,'index']);
+
+Route ::get('user/getUserById/{id}',[UserController::class,'show']);
