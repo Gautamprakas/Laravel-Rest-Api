@@ -200,4 +200,18 @@ class UserController extends Controller
         }
         return response()->json($response,$status_code);
     }
+
+
+    public function register(Request $request){
+        $validatedData=$request->validate([
+            'name'=>'required',
+            'email'=>['required','email'],
+            'password'=>['min:8','confirmed']]);
+        $user=User::create($validatedData);
+        $token=$user->createToken("auth_token")->accessToken;
+        return response()->json([
+            "message"=>"User Registered Succed",
+            "token"=>$token,
+            "status"=>1],200);
+    }
 }
