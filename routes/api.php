@@ -41,10 +41,16 @@ Route::post('user/store','App\Http\Controllers\api\UserController@store');
 
 Route::get('user/getData/{flag}',[UserController::class,'index']);
 
-Route::get('user/getUserById/{id}',[UserController::class,'show']);
+//Route::get('user/getUserById/{id}',[UserController::class,'show']);//comment out for testing middleware
 
 Route::delete('user/deleteUserById/{id}',[UserController::class,'destroy']);
 
 Route::put('user/updateUserById/{id}',[UserController::class,'update']);
 
 Route::post('/register',[UserController::class,'register']);
+
+Route::post('/login',[UserController::class,'login']);
+
+Route::middleware('auth:api')->group(function(){
+    Route::get('user/getUserById/{id}',[UserController::class,'show']);
+});
