@@ -107,6 +107,8 @@ class UserController extends Controller
         }else{
             $response=[
                 "message"=>"User Find",
+                "name"=>$user->name,
+                "email"=>$user->email,
                 "data"=>$user
             ];
         }
@@ -199,5 +201,37 @@ class UserController extends Controller
             $status_code=404;
         }
         return response()->json($response,$status_code);
+    }
+
+
+    public function register(Request $request){
+        $validatedData=$request->validate([
+            'name'=>'required',
+            'email'=>['required','email'],
+            'password'=>['min:8','confirmed']]);
+        $user=User::create($validatedData);
+        $token=$user->createToken("auth_token")->accessToken;
+        return response()->json([
+            "message"=>"User Registered Succed",
+            "token"=>$token,
+            "status"=>1],200);
+    }
+    public function login(Request $request){
+        $validatedData=$request->validate([
+            'email'=>['required'],
+            'password'=>['required']
+        ]);
+        $user=User::where(['email'=>$validatedData['email'],'password'=>$validatedData['password']])->first();
+        if(!is_null($user)){
+            $token=$user->createToken("auth_token")->accessToken;
+            return response()->json([
+                "message"=>"User Logged In  Succed",
+                "token"=>$token,
+                "status"=>1],200);
+        }else{
+            return response()->json([
+                "message"=>"Can't Find The User",
+                "status"=>1],200);
+        }
     }
 }
