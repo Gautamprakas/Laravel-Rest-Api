@@ -133,7 +133,32 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user=User::find($id);
+        if(!is_null($user)){
+            DB::beginTransaction();
+            try{
+                $user->name=$request['name'];
+                $user->email=$request['email'];
+                $user->address=$request['address'];
+                $user->pincode=$request['pincode'];
+                $user->contact=$request['contact'];
+                $user->save();
+                DB::commit();
+            }catch(\Exception $err){
+                DB::rollback();
+                $user=null;
+                return response()->json(["status"=>0,
+                "message"=>"Enternel Server Error"],500);
+
+            }
+        }else{
+            return response()->json(["status"=>0,
+                "message"=>"Can't Find The  User"],200);
+        }
+        if(!is_null($user)){
+            return response()->json(["status"=>1,
+                "message"=>"User Data Updated"],200);
+        }
     }
 
     /**
@@ -144,6 +169,35 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user=User::find($id);
+        if(!is_null($user)){
+            DB::beginTransaction();
+            try{
+                $user->delete();
+                DB::commit();
+                $response=[
+                    "message"=>"User deleted Successfully",
+                    "status"=>1
+                ];
+                $status_code=200;
+
+            }catch(\Exception $err){
+                DB::rollback();
+                $response=[
+                    "message"=>"Internel Server Error",
+                    "status"=>0
+                ];
+                $status_code=500;
+
+
+            }
+        }else{
+            $response=[
+                    "message"=>"User no exist",
+                    "status"=>0
+                ];
+            $status_code=404;
+        }
+        return response()->json($response,$status_code);
     }
 }
